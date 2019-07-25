@@ -482,7 +482,10 @@ class Sanic:
                     except AttributeError:
                         # On Python3.5 the Transport classes in asyncio do not
                         # have a get_protocol() method as in uvloop
-                        protocol = request.transport._protocol
+                        try:
+                            protocol = request.transport._protocol
+                        except AttributeError:
+                            protocol = request.transport._app_protocol
                     protocol.app = self
 
                     ws = await protocol.websocket_handshake(
